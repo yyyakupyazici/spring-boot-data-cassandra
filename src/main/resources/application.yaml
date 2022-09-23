@@ -1,0 +1,7 @@
+spring:
+  data:
+    cassandra:
+      keyspace-name: test_ks
+      schema-action: CREATE_IF_NOT_EXISTS
+      contact-points: 127.0.0.1
+      port: 9042
