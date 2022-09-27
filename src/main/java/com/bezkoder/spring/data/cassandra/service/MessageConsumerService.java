@@ -9,7 +9,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import com.bezkoder.spring.data.cassandra.dto.UserFollowersDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +21,10 @@ public class MessageConsumerService {
     private final UserService userService;
 
     @KafkaListener(topics = "follower", groupId = "group_id")
-    public void consume(@Payload String message,
+    public void consume(@Payload UserFollowersDto userFollowerDto,
             @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition)
             throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        UserFollowersDto userFollowersDto = objectMapper.readValue(message, UserFollowersDto.class);
-        userService.saveUsersFollowers(userFollowersDto);
-        log.info(String.format("#### -> Consumed message ->%s", userFollowersDto.toString()));
+        userService.saveUsersFollowers(userFollowerDto);
+        log.info(String.format("#### -> Consumed message ->%s", userFollowerDto.toString()));
     }
 }
